@@ -1,0 +1,57 @@
+﻿@model ServerMonitoring.Models.EventViewModel
+@{
+    ViewBag.Title = "Events";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <table class="table table-bordred table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                        <th>Date</th>
+                        <th>Risk</th>
+                        <th>Seen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var e in Model.Events)
+                    {
+                        <tr class="table-row" @*id="table-row-color-@e.EventType.Risk"*@>
+                            <th>@e.EventType.Name</th>
+                            <th>@e.Value</th>
+                            <th>@e.Created</th>
+                            <th>@e.EventType.Risk</th>
+                            @if (e.Notification != null && e.Notification.Seen == false)
+                            {
+                               <th><i class="fa fa-warning"></i></th>
+                            }
+                            else
+                            {
+                                <th style="color:green"><i class="fa fa-check"></i></th>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+@section Scripts{
+    <script>
+
+        $(document).ready(function () {
+
+           
+
+
+        });
+
+
+    </script>
+}
+
+

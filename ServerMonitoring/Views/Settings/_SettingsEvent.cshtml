@@ -1,0 +1,77 @@
+﻿@model ServerMonitoring.Models.SettingsModel
+@using Model
+<div class="yscroll-container">
+
+    <i class="fa fa-question-circle pull-right" title="You will be notified when the system detects a value above the
+                       peakvalue. The notify checkbox is whether you want to receive an email or not"></i>
+    @{
+
+
+        for (int i = 0; i < Model.EventTypes.Count; i++)
+        {
+            @Html.HiddenFor(m => m.EventTypes[i].Id)
+            @Html.HiddenFor(m => m.EventTypes[i].Name)
+            <div class="event-container">
+                <div>
+                    <p><b>@Model.EventTypes[i].Name</b></p>
+
+                </div>
+                @if (Model.EventTypes[i].Name != StaticStrings.ServerDown && Model.EventTypes[i].Name != StaticStrings.ServerUp) //server down/up have no peak value
+                {
+                    <div class="peakvalue-div">
+                        <p>Peak value</p>
+                        @Html.TextBoxFor(m => m.EventTypes[i].PeakValue, Model.EventTypes[i].PeakValue.ToString(),
+ new { @class = "form-control", id = "editPeakValue", type = "number", @min="1"})
+                        @Html.ValidationMessageFor(m => m.EventSettings[i].Value, "Please enter a valid interval",
+ new { @class = "text-danger" })
+                    </div>
+                }
+                <div class="notify-div">
+                    <p>Notify</p>
+                    @Html.CheckBoxFor(m => m.EventTypes[i].Notify,
+  new { @checked = "checked" })
+                </div>
+
+
+                <div class="risk-div">
+                    <p>Category</p>
+                    @Html.DropDownListFor(
+           model => model.EventTypes[i].Risk,
+           new SelectList(
+                  new List<Object>{
+                       new { value = 1 , text = "Danger"  },
+                       new { value = 2 , text = "Warning" },
+                       new { value = 3 , text = "Healthy"}
+                    },
+                  "value",
+                  "text",
+                   Model.EventTypes[i].Risk
+           ), new { @class = "form-control", id = "editRisk" }
+        )
+
+                </div>
+
+            </div>
+
+            if (Model.EventTypes.Count - 1 != i)
+            {
+                <br /><hr />
+            }
+
+        }
+
+    }
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        $(".dropdown-risk").on("change", function (val) {
+            console.log($('.dropdown-risk').attr("data-id"));
+            console.log($('.dropdown-risk').val()); //1,2,3
+
+        });
+
+    });
+</script>

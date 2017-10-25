@@ -1,0 +1,43 @@
+﻿@using ServerMonitoring.Models
+@model LoginViewModel
+
+@{
+    Layout = "";
+ }
+
+<html>
+<head>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/bootstrap")
+</head>
+<body>
+    <h2>@ViewBag.Title</h2>
+    <div class="container">
+        <div class="card card-container">
+           
+            <div style="display:inline-block;"><h1 style="text-align: center;">Veplan monitor</h1>
+            </div>
+            @using (Html.BeginForm("Login", "Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-signin", role = "form" }))
+            {
+                
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <span id="reauth-email" class="reauth-email"></span>
+               
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @id = "inputEmail", autofocus = "", placeholder = "Email" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+               
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", @id = "inputPassword", placeholder = "Password" })
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                
+                <input type="submit" value="Log in" class="btn btn-lg btn-primary btn-block btn-signin"/>
+                      
+            }
+        </div><!-- /card-container -->
+    </div><!-- /container -->
+
+</body>
+</html>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

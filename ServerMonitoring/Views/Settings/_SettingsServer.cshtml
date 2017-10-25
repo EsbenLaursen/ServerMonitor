@@ -1,0 +1,22 @@
+﻿@model ServerMonitoring.Models.SettingsModel
+@{
+    for (int i = 0; i < Model.ServerSettings.Count; i++)
+    {
+
+        @Html.HiddenFor(m => m.ServerSettings[i].Id)
+        @Html.HiddenFor(m => m.ServerSettings[i].Description)
+        @Html.HiddenFor(m => m.ServerSettings[i].Name)  
+              <p><b>@Model.ServerSettings[i].Description</b></p>
+        <div class="interval-div">
+           
+            @Html.TextBoxFor(m => m.ServerSettings[i].Value, Model.ServerSettings[i].Value.ToString(), new { @class = "form-control", id = "editValue", type = "number", min = "1" })
+            @Html.ValidationMessageFor(m => m.ServerSettings[i].Value, "Please enter a valid interval", new { @class = "text-danger" })
+            <p> minutes</p>
+        </div>
+        if (Model.ServerSettings.Count - 1 != i)
+        {
+            <br /><hr />
+            }
+        }
+}
+

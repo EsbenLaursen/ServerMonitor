@@ -1,0 +1,140 @@
+﻿@model ServerMonitoring.Models.ReportViewModel
+@using Model
+
+<div class="row">
+    <div class="row">
+        <div class="col-md-4">
+            <p class="bold">Report summary</p>
+        </div>
+        <div class="col-md-4">
+            <p class="center bold"> @Model.ServerName </p>
+        </div>
+        <div class="col-md-4">
+            <p class="bold pull-right"> @Model.from.ToString("yyyy/MM/dd") - @Model.to.ToString("yyyy/MM/dd") </p>
+        </div>
+    </div>
+    <hr />
+    <br />
+    <div class="row">
+        <div class="col-md-6">
+            <p class="bold">Events occured</p>
+        </div>
+        <div class="col-md-6">
+            <p class="bold">Averages</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <p>Server down: @Model.Events.Where(x => x.EventType.Name == StaticStrings.ServerDown).ToList().Count (@Model.MinutesDown)</p>
+            <p>Server up: @Model.Events.Where(x => x.EventType.Name == StaticStrings.ServerUp).ToList().Count (@Model.MinutesUp) </p>
+            <p>Response time high: @Model.Events.Where(x => x.EventType.Name == StaticStrings.ResponseTimeHigh).ToList().Count</p>
+            <p>Low memory: @Model.Events.Where(x => x.EventType.Name == StaticStrings.LowMemory).ToList().Count</p>
+        </div>
+        <div class="col-md-6">
+            <p>Average response time: @Model.AverageResponseTime</p>
+            <p>Average cpu utilization: @Math.Round(Model.AverageCpuUtilization, 2)%</p>
+            <p id="reportDownload"></p>
+            <p id="reportUpload"></p>
+            @*<p id="reportPeakDownload"></p>
+            <p id="reportPeakUpload"></p>*@
+
+            <p>Network utilization: @Model.NetworkViewModel.NetworkUtilization %</p>
+        </div>
+    </div>
+    <hr />
+    <br />
+    <div class="row">
+        <div class="col-md-6">
+            <p class="bold">User activity</p>
+            <p>Total requests: @Model.TotalRequests</p>
+            <p>Total web requests: @Model.TotalWebRequests</p>
+            <p>Total Mobile requests: @Model.TotalMobileRequests</p>
+        </div>
+        <div class="col-md-6">
+            <p>Unique users: @Model.UniqueUsers</p>
+            <p>Average requests: @Model.TotalAverageRequests</p>
+            <p>Average mobile requests: @Model.AverageMobilRequests</p>
+            <p>Average web requests: @Model.AverageWebRequests</p>
+        </div>
+    </div>
+    <hr />
+    <br />
+    <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+            <p class="bold">Complete list of events</p>
+        </div>
+        <div class="col-md-4">
+        </div>
+    </div>
+    <div class="row" id="table-container">
+        <table class="table table-bordred table-striped" style="overflow-y:scroll">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Value</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var e in Model.Events)
+            {
+                    <tr class="table-row">
+                        <th>@e.EventType.Name</th>
+                        @if (e.EventType.Name != StaticStrings.ServerDown && e.EventType.Name != StaticStrings.ServerUp)
+                        {
+                            <th>@e.Value</th>
+                        }
+                        else
+                        {
+                            <th>
+                                @{
+                                    long minute = e.Value % 60;
+                                    long hour = (e.Value / 60) % 24;
+                                    long days = (e.Value / 60 / 24) % 24;
+                                    string uptimeString = days + " days " + hour + " hours " + minute + " minutes";
+                                }
+
+                                @uptimeString
+                            </th>
+                                    }
+                        @if (e.EventType.Name != StaticStrings.ServerDown && e.EventType.Name != StaticStrings.ServerUp)
+                        {
+                            <th> @e.Created</th>
+                        }
+                        else
+                        {
+                            <th>
+                                @e.Created - @e.Created.AddMinutes(e.Value)
+                            </th>
+                        }
+
+                    </tr>
+                                    }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        function formatBytes(bytes) {
+            if (bytes < 1024) return bytes + " Bytes";
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(2) + " KB";
+            else if (bytes < 1073741824) return (bytes / 1048576).toFixed(2) + " MB";
+            else return (bytes / 1073741824).toFixed(2) + " GB";
+        };
+
+        $('#reportUpload').html('Upload: ' + formatBytes(@Model.NetworkViewModel.Upload));
+        $('#reportDownload').html('Download: ' + formatBytes(@Model.NetworkViewModel.Download));
+
+        @*$('#reportPeakUpload').html('Peak upload: ' + formatBytes(@Model.NetworkViewModel.PeakDownload));
+        $('#reportPeakDownload').html('Peak download: ' + formatBytes(@Model.NetworkViewModel.PeakUpload));*@
+
+
+
+    });
+
+</script>

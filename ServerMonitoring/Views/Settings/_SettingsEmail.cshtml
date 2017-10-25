@@ -1,0 +1,16 @@
+﻿@model ServerMonitoring.Models.SettingsModel
+
+@using Model
+
+<div class="row">
+    <div class="container">
+        @Html.ListBoxFor(m => m.EmailRecipents, new SelectList(Model.EmailRecipents, "Id", "Email"))
+        
+        
+        <input type="text" name="email" value="email" />
+        <button class="btn btn-default">Add</button>
+
+
+
+    </div>
+</div>

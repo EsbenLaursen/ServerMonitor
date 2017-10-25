@@ -1,0 +1,49 @@
+﻿@model ServerMonitoring.Models.DashBoardViewModel
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                User statistics (Time interval: @Model.SettingsModel.Settings.FirstOrDefault(x => x.Name == "UsersOnlineInterval").Value minutes )
+            </h3>
+        </div>
+        <div class="panel-body fixed-panel">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>
+                            Requests last interval
+                            <div class="toggle-requests" tabindex="0">
+                                <i id="requests-arrow" class="fa fa-chevron-up" aria-hidden="true"></i>
+                            </div>
+                        </th>
+                        <th id="totalRequests" title="Total requests"></th>
+                    </tr>
+                    <tr class="requestInfo">
+                        <th style="padding-left:2em">Web</th>
+                        <th id="webRequests" title="Requests by web users"></th>
+                    </tr>
+                    <tr class="requestInfo">
+                        <th style="padding-left:2em">Mobile</th>
+                        <th id="mobilRequests" title="Requests by mobile users"></th>
+                    </tr>
+                    <tr>
+                        <th>
+                            Average requests
+                            <div class="toggle-average-requests" tabindex="0">
+                                <i id="requests-average-arrow" class="fa fa-chevron-up" aria-hidden="true"></i>
+                            </div>
+                        </th>
+                        <th id="averageTotalRequest" title="Total requests"></th>
+                    </tr>
+                    <tr class="requestAverageInfo">
+                        <th style="padding-left:2em">Web</th>
+                        <th id="averageWebRequest" title="Web"></th>
+                    </tr>
+                    <tr class="requestAverageInfo">
+                        <th style="padding-left:2em">Mobile</th>
+                        <th id="averageMobileRequest" title="Mobile"></th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>

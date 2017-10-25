@@ -1,0 +1,116 @@
+﻿@using ServerMonitoring.Helpers
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Server monitoring</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/app.js"></script>
+
+    <script src="~/Scripts/gauge.min.js"></script>
+    <script src="https://use.fontawesome.com/040f355ddf.js"></script>
+    <script async src="http://www.google-analytics.com/analytics.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+    <script type="text/javascript" src="http://www.chartjs.org/dist/2.6.0/Chart.js"></script>
+    <script type="text/javascript" src="http://www.chartjs.org/samples/latest/utils.js"></script>
+    <script src="~/Scripts/notify.js"></script>
+</head>
+<body>
+    <div class="">
+        <ul class="navbar-top">
+           
+            <li style="width:150px;">  @Html.ActionLink("VePlan", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })  </li>
+
+            <li>
+                <div class="users-online-container" title="Active mobile users">
+                    <i class="fa fa-mobile fa-2x">
+                    </i><div class="loader" id="mobileLoader"></div><div id="mobileUsersOnline" style="display:none;"></div>
+                </div>
+            </li>
+
+            <li style="width:100px">
+                <div class="users-online-container" title="Active web users">
+                    <i class="fa fa-desktop fa-2x"></i>
+                    <div class="loader" id="webLoader"></div><div id="webUsersOnline" style="display:none;"></div>
+                </div>
+            </li>
+            <li>
+                <a class="fa fa-bell" href="@Url.Action("Event", "Event")">
+                    <div id="notification-alert">
+                        <span class="fa fa-comment"></span>
+                        <span class="num"></span>
+                    </div>
+                </a>
+            </li>
+            <li id="li-report">
+                @Html.ActionLink("Report", "Index", "Report", new { area = "" }, new { @class = "" })
+                <i class="fa fa-file-text-o fa-2x" aria-hidden="true"></i>
+            </li>
+
+            <li class="float-vertical-align" style="margin-right: 50px;"> <i class="fa fa-gears fa-2x" id="settingsBtn"></i></li>
+            <li class="float-vertical-align">
+                @Html.Partial("_LoginPartial")
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="top-space">
+        </div>
+        <div>
+            @RenderBody()
+        </div>
+    </div>
+    <div class="container">
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+
+            </div>
+
+        </div>
+    </div>
+
+    @RenderSection("scripts", required: false)
+    <script>
+        $(document).ready(function () {
+
+            $.notify.defaults({ className: "success" })
+           
+            GetNotificationCount();
+            GetEventDetails();
+            function GetEventDetails() {
+                $.ajax({
+                    url: "/Event/GetNewEventDetails",
+                    type: 'GET',
+                    success: function (data) {
+                        $('.event-detail-container').html(data);
+                    },
+                    error: function (error) {
+                        console.log('GetEventDetails: ' + error);
+                    }
+                });
+            };
+            setInterval(GetEventDetails, 100 * 60 * 1);
+
+            $('#settingsBtn').click(function () {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'html',
+                    url: '/Setting/GetSettings',
+                    success: function (data) {
+
+                        $('.modal-content').html(data);
+                        $('#myModal').fadeToggle(200);
+                    }, error: function (xhr, status, error) {
+                    }
+                });
+            });
+            requestData();
+        });
+    </script>
+</body>
+</html>
+

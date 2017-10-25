@@ -1,0 +1,520 @@
+﻿@model ServerMonitoring.Models.DashBoardViewModel
+@using ServerMonitoring.Helpers
+@{
+    ViewBag.Title = "Frontpage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row" id="container">
+    @*panel/tables*@
+
+    <div class="col-md-6 padding-md" style="margin: 10px;">
+        <div class="panel" style="border: 1px solid gray;">
+            <div class="row">
+                <div class="col-md-6 padding-md">
+                    @Html.Partial("~/Views/Server/_ServerDetails.cshtml")
+                </div>
+                <div class="col-md-6 padding-md">
+                    @Html.Partial("~/Views/Server/_RequestDetails.cshtml")
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 padding-md">
+                    @Html.Partial("~/Views/Server/_RamDetails.cshtml")
+                </div>
+                <div class="col-md-6 padding-md">
+                    <div class="event-detail-container">
+                        @Html.Partial("~/Views/Server/_EventDetails.cshtml", Model.EventViewModel)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 padding-md">
+                    @Html.Partial("~/Views/Server/_NetworkDetails.cshtml", Model.ServerDataViewModel)
+                </div>
+                <div class="col-md-6 padding-md">
+                    <canvas id="cpuGauge"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*graphs*@
+
+
+    <div class="col-md-5 padding-xl pull-right" style="margin-right:30px">
+        <div class="">
+            <div class="row" style="margin-bottom: 10px;" id="canvas-all">
+                <div class="outer-canvas-container">
+                    @Html.Partial("~/Views/Graph/_UserActivityGraph.cshtml", Model)
+                </div>
+            </div>
+            <div class="row" id="canvas-all">
+                <div class="outer-canvas-container" style="margin-top:5px;">
+                    <canvas class="box-shadow padding-canvas" id="canvas-cpu-graph"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+
+
+            $(".dropdown-toggle").dropdown();
+
+            $('#expand-user-graph').click(function(){
+                $.ajax({
+                    url: '/Home/GetUserGraph/',
+                    type: "GET",
+                    success: function (data) {
+                        //console.log('data: ' + data);
+
+                        $('.modal-content').html(data);
+                        $('#myModal').fadeToggle(200);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        console.log('error');
+                    }
+                });
+
+            });
+
+            //Chart js get color and set font family
+            Chart.defaults.global.defaultFontFamily = "Tahoma";
+            var color = Chart.helpers.color;
+
+            //Get the server from the dropdown, so we know what to display for
+            var serverToDisplay = $('#server-dropdown').val();
+
+            //Gets the canvas
+            var ctxMulti = document.getElementById("canvas-multi-graph").getContext("2d");
+            var ctxCpuAndResponseTime = document.getElementById("canvas-cpu-graph").getContext("2d");
+
+            //Call the update method
+            UpdateUserOnlineGraph();
+            UpdateServerData();
+            UpdateResponseTimeGraph();
+
+            //Method in app.js (placed in shared layout)
+            requestData();
+
+
+            //Configuration for CPU graph
+            var configCpuAndResponseTime = {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        lineTension:0,
+                        label: "CPU Utilization in percentage",
+                        backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+                        borderColor: window.chartColors.red,
+                        fill: false,
+                        data: @Html.JsonInsert(Model.ServerDataViewModel.CPUUtilizationGraphData),
+                    },{
+                        label: "Response time",
+                        backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
+                        borderColor: window.chartColors.green,
+                        fill: false,
+                        yAxisID: "y-axis-1",
+                        data: @Html.JsonInsert(Model.RequestDataViewModel.AverageResponseTimeGraphData),
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: "CPU Utilization / Response time",
+                        fontSize: 16
+                    },
+                    scales: {
+                        xAxes: [{
+                            type: "time",
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Time',
+                                fontSize: 14
+
+                            },
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 45,
+                                minRotation: 45,
+                                fontSize: 14
+                            },
+                            unit: 'hour',
+                            unitStepSize: 1,
+                            time: {
+                                displayFormats: {
+                                    'hour': 'HH:mm'
+                                }
+                            }
+                        }],
+                        yAxes: [{
+                            position: "left",
+                            id: "y-axis-0",
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: '% utilization',
+                                fontSize: 14
+
+                            },
+                            ticks: {
+                                fontSize: 14
+                            }
+                        },
+                        {
+                            position: "right",
+                            id: "y-axis-1",
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Responsetime/ms',
+                                fontSize: 14
+
+                            },
+                            ticks: {
+                                fontSize: 14
+                            }
+                        }]
+                    },
+                    legend:{
+                        display: false
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                if(tooltipItem.datasetIndex == 0)
+                                {
+                                    var percentage = data.datasets[0].data[tooltipItem.index].y;
+                                    return percentage + ' %';
+                                } else
+                                {
+                                    var timeInMs = data.datasets[1].data[tooltipItem.index].y;
+                                    return timeInMs + ' ms';
+                                }
+
+
+                            },
+                            title: function(tooltipItems, data) {
+                                var tooltipItem = tooltipItems[0];
+                                var time = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].x;
+
+                                return 'Time: ' + moment(time).format('HH:mm');;
+                            }
+                        }
+                    }
+                }
+            }
+            //Store graph in variable
+            window.CpuAndResponseTimeChart = new Chart(ctxCpuAndResponseTime, configCpuAndResponseTime);
+
+            //Update CPU graph, aswell as Uptime, ramAvailable, Threads, Processes,
+            function UpdateServerData() {
+                $.ajax({
+                    url: "/api/serverDetailsData/" + serverToDisplay,
+                    type: 'GET',
+                    success: function (data) {
+                        //Update the graph with CPU DATA
+                        configCpuAndResponseTime.data.datasets[0].data = data.CPUUtilizationGraphData;
+                        //If currentstatus false, the server is down
+                        if (data.CurrentStatus == false) {
+                            //LED GREEN
+                            $('.led-green').addClass("led-red").removeClass("led-green");
+
+                            //SERVER INFORMATION
+                            $('#UpDownTime').html("Down time");
+                            $('#currentProcesses').html("<i class='fa fa-ban' aria-hidden='true'>");
+                            $('#dataReceivedDate').html("<i class='fa fa-ban' aria-hidden='true'>");
+                            $('#currentThreads').html("<i class='fa fa-ban' aria-hidden='true'>");
+
+                            //RAM DIAGRAM
+                            $('#ram-available').css("display", "none");
+                            $('#ram-unavailable').css("display", "block").css("font-size", "11px");
+                            $('#ram-total-text').css("display", "block");
+                            $('#ram-available-text').css("display", "block");
+
+
+
+                        } else {
+                            //RAM DIAGRAM
+                            $('#ram-available').css("display", "block");
+                            $('#ram-unavailable').css("display", "none");
+                            $('#ram-unavailable-text').html('Used: '+ ConvertToGbFormat(GetUsedRAM(data.RAMTotal, data.RAMAvailable))
+                                + ' (' + PercentUnavailable(data.RAMTotal, data.RAMAvailable) + '%)');
+                            $('#ram-available-text').html('Free: '+ ConvertToGbFormat(data.RAMAvailable)
+                            + ' (' + PercentAvailable(data.RAMTotal, data.RAMAvailable) + '%)');
+
+                            //LED RED
+                            $('.led-red').addClass("led-green").removeClass("led-red");
+
+                            $('#UpDownTime').html("Up time");
+                            $('#currentThreads').html(data.Threads);
+                            $('#currentProcesses').html(data.Processes);
+                            $('#dataReceivedDate').html(moment(data.Created).format('DD/MM - HH:mm'));
+
+                            configRam.data.datasets[0].data =
+                                { "0": PercentUnavailable(data.RAMTotal, data.RAMAvailable),
+                                "1":PercentAvailable(data.RAMTotal, data.RAMAvailable)}
+
+                            window.myPie.update();
+                        }
+                        $('#upTime').html(data.Uptime);
+
+                        //Network INFORMATION
+                        $('#bytesSent').html(formatBytes(data.NetworkViewModel.Upload));
+                        $('#BytesReceived').html(formatBytes(data.NetworkViewModel.Download));
+                        $('#peakUpload').html(data.NetworkViewModel.PeakUploadString);
+                        $('#peakDownload').html(data.NetworkViewModel.PeakDownloadString);
+                        $('#networkUtilization').html(data.NetworkViewModel.NetworkUtilization + ' %');
+                        
+
+                        window.myPie.update();
+                        window.CpuAndResponseTimeChart.update();
+                    },
+                    error: function (error) {
+                        console.log('CPU graph error + ' + error);
+                    }
+                });
+            }
+            setInterval(UpdateServerData, 100 * 60 * 1);
+            //When dropdown changes, update the data with the new selected value
+            $("#server-dropdown").change(function() {
+                serverToDisplay = this.options[this.selectedIndex].value;
+                UpdateServerData();
+            });
+
+            //Configuration for Multi graph, Active Users and responstid
+            var configUserOnlineGraph = {
+                type: "line",
+                data: {
+                    datasets: [{
+                        label: "Active mobile user",
+                        backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+                        borderColor: window.chartColors.red,
+                        fill: false,
+                        yAxisID: "y-axis-0",
+                        data: @Html.JsonInsert(Model.MobileUsersData),
+                    }, {
+                        label: "Active web users",
+                        backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                        borderColor: window.chartColors.blue,
+                        fill: false,
+                        yAxisID: "y-axis-0",
+                        data: @Html.JsonInsert(Model.WebUsersData),
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: "User Activity",
+                        fontSize: 16
+                    },
+                    scales: {
+                        yAxes: [{
+                            position: "left",
+                            id: "y-axis-0",
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Users',
+                                fontSize: 14
+
+                            },
+                            ticks: {
+                                fontSize: 14
+                            }
+                        }],
+                        xAxes: [{
+                            type: "time",
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Time',
+                                fontSize: 14
+
+                            },
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 45,
+                                minRotation: 45,
+                                fontSize: 14
+                            },
+                            unit: 'hour',
+                            unitStepSize: 1,
+                            time: {
+                                displayFormats: {
+                                    'hour': 'HH:mm'
+                                }
+                            }
+                        }],
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                var users = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
+
+                                var type;
+                                if(tooltipItem.datasetIndex == 0) { type = "Mobile" } else { type="Web"  }
+
+                                return type + ' users: ' + users;
+                            },
+                            title: function(tooltipItems, data) {
+                                var tooltipItem = tooltipItems[0];
+                                var time = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].x;
+                                return 'Time: ' + moment(time).format('HH:mm');;
+                            }
+                        }
+                    }
+                }
+            }
+            //Store graph in variable
+            window.multiGraph = new Chart(ctxMulti, configUserOnlineGraph);
+            //Update the multi graph (ResponseTime part)
+            function UpdateResponseTimeGraph() {
+                $.ajax({
+                    url: "/api/requestGraphData",
+                    type: 'GET',
+                    success: function (data) {
+                        //Update graph with responsetime data
+                        configCpuAndResponseTime.data.datasets[1].data = data.AverageResponseTimeGraphData;
+                        window.multiGraph.update();
+                    },
+                    error: function (error) {
+                        console.log('Performance graph error');
+                    }
+                });
+            }
+            setInterval(UpdateResponseTimeGraph, 100 * 60 * 1)
+            //Update the multi graph (User online part)
+            function UpdateUserOnlineGraph() {
+                $.ajax({
+                    url: "/api/graphData",
+                    type: 'GET',
+                    datatype: 'json',
+                    success: function(data) {
+                        configUserOnlineGraph.data.datasets[0].data = data.MobileUsersData;
+                        configUserOnlineGraph.data.datasets[1].data = data.WebUsersData;
+                        window.multiGraph.update();
+                    },
+                    error: function (error) {
+                        console.log('UpdateUserOnlineGraph graph error: ' + error);
+                    }
+                });
+            }
+            setInterval(UpdateUserOnlineGraph, 100 * 60 * 1);
+
+
+            //Pie chart
+            var configRam = {
+
+                type: 'pie',
+                data: {
+                    datasets: [{
+                        data: [
+                            PercentAvailable(@Model.ServerDataViewModel.RAMTotal, @Model.ServerDataViewModel.RAMAvailable),
+                            PercentUnavailable(@Model.ServerDataViewModel.RAMTotal, @Model.ServerDataViewModel.RAMAvailable)
+                        ],
+                        backgroundColor: [
+                            window.chartColors.red,
+                            window.chartColors.green
+                        ],
+                        label: 'Dataset 1'
+                    }],
+                    labels: [
+                        "Used",
+                        "Free"
+                    ]
+                },
+                options: {
+                    responsive: true
+                }
+            };
+            function PercentAvailable(total, available) {
+                return percentage = Math.round(available/total*100);
+            };
+            function PercentUnavailable(total, available) {
+                return percentage = Math.round(100-available/total*100);
+            };
+            function GetUsedRAM(total, available)
+            {
+                return total-available;
+            };
+            function ConvertToGbFormat(mb)
+            {
+                return formatBytes(mb*1000*1000);
+            }
+
+            function formatBytes(bytes) {
+                if(bytes < 1024) return bytes + " Bytes";
+                else if(bytes < 1048576) return(bytes / 1024).toFixed(2) + " KB";
+                else if(bytes < 1073741824) return(bytes / 1048576).toFixed(2) + " MB";
+                else return(bytes / 1073741824).toFixed(2) + " GB";
+            };
+
+            $('#bytesSent').html(formatBytes(@Model.ServerDataViewModel.NetworkViewModel.Upload));
+            $('#BytesReceived').html(formatBytes(@Model.ServerDataViewModel.NetworkViewModel.Download));
+
+            $('#peakDownload').html('@Model.ServerDataViewModel.NetworkViewModel.PeakDownloadString');
+            $('#peakUpload').html('@Model.ServerDataViewModel.NetworkViewModel.PeakUploadString');
+
+
+
+
+
+            var ctxRam = document.getElementById("canvas-ram").getContext("2d");
+            window.myPie = new Chart(ctxRam, configRam);
+
+
+            //         $.fn.gauge = function(opts) {
+            //             this.each(function() {
+            //                 var $this = $(this),
+            //                     data = $this.data();
+
+            //                 if (data.gauge) {
+            //                     data.gauge.stop();
+            //                     delete data.gauge;
+            //                 }
+            //                 if (opts !== false) {
+            //                     data.gauge = new Gauge(this).setOptions(opts);
+            //                 }
+            //             });
+            //             return this;
+            //         };
+            //         var opts = {
+            //             angle: -0.2, // The span of the gauge arc
+            //             lineWidth: 0.2, // The line thickness
+            //             radiusScale: 0.96, // Relative radius
+            //             pointer: {
+            //                 length: 0.57, // // Relative to gauge radius
+            //                 strokeWidth: 0.044, // The thickness
+            //                 color: '#1241FF' // Fill color
+            //             },
+            //             limitMax: false,     // If false, max value increases automatically if value > maxValue
+            //             limitMin: false,     // If true, the min value of the gauge will be fixed
+            //             colorStart: '#6F6EA0',   // Colors
+            //             colorStop: '#C0C0DB',    // just experiment with them
+            //             strokeColor: '#EEEEEE',  // to see which ones work best for you
+            //             generateGradient: true,
+            //             highDpiSupport: true,     // High resolution support
+            //             staticZones: [
+            //{strokeStyle: "#F03E3E", min: 90, max: 100}, // Red from 100 to 130
+            //{strokeStyle: "#FFDD00", min: 69, max: 90}, // Yellow
+            //{strokeStyle: "#30B32D", min: 0, max: 60}, // Green
+            //             ]
+            //         };
+            //         var target = document.getElementById('cpuGauge'); // your canvas element
+            //         var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
+            //         gauge.maxValue = 100; // set max gauge value
+            //         gauge.setMinValue(0);  // Prefer setter over gauge.minValue = 0
+            //         gauge.animationSpeed = 44; // set animation speed (32 is default value)
+            //         gauge.set(65); // set actual value
+
+        });
+    </script>
+}

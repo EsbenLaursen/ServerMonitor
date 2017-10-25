@@ -1,0 +1,44 @@
+﻿@model ServerMonitoring.Models.ServerDataViewModel
+
+<div class="panel panel-primary" style="margin-right: 1px;">
+    <div class="panel-heading">
+        Network details
+    </div>
+    <div class="panel-body fixed-panel">
+        <table class="table table-bordred table-striped">
+            <thead>
+                <tr></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Upload last 24 hours</th>
+                    <th id="bytesSent"><i class="fa fa-ban"></i></th>
+
+                </tr>
+                <tr>
+                    <th>Downloaded last 24 hours</th>
+                    <th id="BytesReceived"><i class="fa fa-ban"></i></th> @*field are sat in index script section*@
+                </tr>
+                <tr>
+                    <th>Peak upload speed</th>
+                    <th id="peakUpload"></th>
+                </tr>
+                <tr>
+                    <th>Peak download speed</th>
+                    <th id="peakDownload"></th>
+                </tr>
+                <tr>
+                    <th>Average network utilization </th>
+                    <th id="networkUtilization">@Model.NetworkViewModel.NetworkUtilization %</th>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Script{
+    <script>
+    </script>
+
+}

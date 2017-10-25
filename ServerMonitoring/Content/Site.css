@@ -1,0 +1,861 @@
+﻿
+
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family: verdana !important;
+    min-width: 500px; /* suppose you want minimun width of 1000px */
+    width: auto !important; /* Firefox will set width as auto */
+    width: 500px; /* As IE ignores !important it will set width as 1000px; */
+    background-color: lightgray;
+}
+
+#editPeakValue {
+     width: 150px;
+        height: 24px;
+}
+
+.peakvalue-div {
+    display: inline-flex;
+}
+
+.notify-div {
+    display: inline-flex;
+}
+
+.interval-div {
+    display: inline-flex;
+}
+
+.interval-div p {
+    margin-left:15px;
+}
+
+.event-container div {
+    width:100%;
+}
+.event-container div p{
+    width:100%;
+}
+#editValue{
+ width: 100px;
+    height: 24px;
+}
+
+#noReportData {
+    display:block;
+        background: #dbdbdf;
+}
+
+#datedropdown {    
+    width: 300px;
+    min-width: 300px;
+    border: #696969 solid 1px;
+        border-radius: 4px;
+        color: #333;
+    background-color: #fff;
+    cursor: pointer;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+#table-container {
+        max-height: 250px;
+    overflow-y: scroll;
+}
+
+#datepicker-body {
+    width: 700px;
+    max-width: 700px;
+    height: 250px;
+    max-height: 250px;
+}
+
+#date-dropdown {
+   border: solid darkgray 1px;
+}
+#errorMessage {
+color:red;
+}
+.my-datepicker {
+    display:inline-flex;
+    padding: 0px;
+    display:inline-flex;
+       margin: 10px;
+}
+#reportLoader{    
+    margin: 0 auto;
+    width:100px;
+    height:100px;
+}
+.report-title{
+      margin-left: 20px;
+    margin-bottom: 18px;
+}
+#report-container p.bold {
+font-weight:bold;
+}
+
+#report-container p.center {
+    text-align: center;
+}
+
+
+
+#report-container{
+       margin: 36px;
+    margin-top: 60px;
+    padding: 30px;
+    padding-top: 35px;
+    background: #dbdbdf;
+   -webkit-box-shadow: 1px 3px 5px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 1px 3px 5px 0px rgba(0,0,0,0.75);
+box-shadow: 1px 3px 5px 0px rgba(0,0,0,0.75);
+}
+#report-outer-container {
+        background: #fff;
+    border-radius: 2px;
+    box-shadow: 0px 3px 7px 0px rgba(0, 0, 0, 0.31);
+        display: block;
+    padding: 15px;
+    margin: 15px;
+    width:100vh;
+    height:90vh;
+}
+
+#ui-datepicker-div {
+    z-index:1151 !important;
+}
+   
+
+.yscroll-container {
+    max-height: 500px;
+    overflow-y: scroll;
+    padding: 20px;
+}
+
+#editRisk {
+    height: 24px;
+    width: 150px;
+        min-width: 150px;
+        padding: 0px 12px;
+}
+    
+
+
+
+ .risk-div {
+    display: inline-flex;
+}
+/*the arrow down in user statistics*/
+.toggle-requests i:hover {
+    color: #428bca;
+}
+
+.toggle-requests {
+    display: inline-block;
+}
+
+.toggle-average-requests i:hover {
+    color: #428bca;
+}
+
+.toggle-average-requests {
+    display: inline-block;
+}
+
+.green {
+    color: green;
+}
+
+.fixed-panel {
+        max-height: 230px;
+    min-height: 230px;
+    overflow-y: auto;
+}
+
+.myDropdownServers {
+border-radius: 4px;
+    border: 1px solid #cccccc;
+}
+
+.default-date-range-list li {
+    width: 100% !important;
+    margin: 3px;
+}
+
+.dropdown {
+        display: inline-table;
+}
+
+.dropdown li {
+    width: 100% !important;
+}
+
+
+
+.table tr th {
+    font-size: 11px;
+}
+
+hr {
+    margin-top: 0px;
+    margin-bottom: 10px;
+    border: 0;
+    border-top: 1px solid #428bca;
+}
+
+.modal-header {
+    background-color: #428bca;
+}
+
+.tab-content {
+    margin: 13px;
+}
+
+.ram-text-container {
+    margin-top: 142px;
+}
+
+    .ram-text-container p {
+        font-size: 11px;
+        font-weight: bold;
+        margin-left: 25px;
+    }
+
+
+
+.canvas-pie-container {
+    max-width: 200px;
+    width: 200px;
+    max-height: 200px;
+    height: 200px;
+}
+
+#server-dropdown {
+    display: inline-block;
+    width: 150px;
+}
+
+#ram-header {
+    text-align: center;
+}
+
+#event-info {
+    cursor: pointer;
+}
+
+
+.panel-primary > .panel-heading {
+    color: #00a2f6;
+    background-color: #000000;
+    border-color: #428bca;
+}
+
+
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+.modal-content {
+    margin: 3% auto !important;
+    width: 38% !important;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+/*MyBtn*/
+.mybtn {
+    background: none;
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 3px 0;
+    font-size: 12px;
+    line-height: 1.42857143;
+    text-align: left;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #fff;
+}
+
+.modal-footer .mybtn {
+    padding: 5px 15px;
+    margin: 5px 7px;
+    font-size: 14px;
+}
+
+    .modal-footer .mybtn:last-child {
+        margin-right: 0;
+    }
+
+.mybtn.mybtn-large {
+    padding: 6px 15px;
+    font-size: 14px;
+    margin-top: 0;
+}
+
+.mybtn.mybtn-lg {
+    padding: 6px 15px;
+    font-size: 14px;
+}
+
+.btn {
+    border-radius: 4px;
+}
+
+
+
+.mybtn:hover, .mybtn:focus {
+    text-decoration: none;
+    color: #fff;
+}
+/*.mybtn:hover i {
+    text-decoration: underline;
+}*/
+
+.mybtn-fill {
+    width: 100%;
+    /*word-break: break-all;*/
+}
+
+.mybtn-default {
+    background-color: #428bca;
+    border-color: #246195;
+}
+
+    .mybtn-default:hover {
+        background-color: #246195;
+    }
+
+.mybtn-success {
+    background-color: #4ba84b;
+    border-color: green;
+}
+
+    .mybtn-success:hover {
+        background-color: green;
+    }
+
+.mybtn-danger {
+    background-color: red;
+    border-color: #C91818;
+}
+
+    .mybtn-danger:hover {
+        background-color: #C91818;
+    }
+
+.mybtn-warning {
+    background-color: #E6B543;
+    border-color: orange;
+}
+
+    .mybtn-warning:hover {
+        background-color: orange;
+    }
+
+
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.navbar-header {
+    font-size: 4em;
+}
+
+.navbar-brand {
+    padding: 11px 0px;
+    font-size: 26px;
+    padding-top: 15px;
+}
+
+.row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.top-space {
+    margin-top: 46px;
+}
+
+/*infobox*/
+
+#info-box {
+    padding: 6px;
+    background-color: black;
+    position: fixed;
+}
+
+    #info-box div p {
+        display: inline-block;
+    }
+
+    #info-box div {
+        font-size: 10px;
+    }
+
+    #info-box p {
+        font-size: 10px;
+    }
+
+#side-bar {
+    position: absolute;
+    z-index: 1;
+}
+
+
+
+
+.navbar-top {
+    margin-bottom: 0;
+    padding: 0px 13px;
+    position: fixed;
+    width: 100%;
+    background-color: black;
+    min-height: 45px;
+    z-index: 1;
+    -webkit-box-shadow: 0 8px 6px -6px #999;
+    -moz-box-shadow: 0 8px 6px -6px #999;
+    box-shadow: 0 8px 6px -6px #463737;
+}
+
+#li-report a
+{
+    margin-right:2px;
+    font-size: 21px;
+}
+    .navbar-top li {
+        display: inline-block;
+        color: #428bca;
+        vertical-align: middle;
+        width: 80px;
+    }
+
+        .navbar-top li:first-child {
+            width: 31px;
+        }
+
+        .navbar-top li:nth-child(2) {
+            width: 75px;
+        }
+
+
+
+        .navbar-top li a:first-child {
+        }
+
+.margin-left-30 {
+    margin-left: 30px;
+}
+
+.panel {
+margin-bottom: 6px;
+-webkit-box-shadow: 3px 2px 10px -2px rgba(0,0,0,0.75);
+-moz-box-shadow: 3px 2px 10px -2px rgba(0,0,0,0.75);
+box-shadow: 3px 2px 10px -2px rgba(0,0,0,0.75);
+}
+
+.panel-body {
+    padding: 5px;
+}
+
+.panel-primary {
+    border-color: #000000;
+}
+
+
+/*canvas*/
+.outer-canvas-container .box-shadow {
+    max-width: 2000px;
+    max-height: 2000px;
+        margin: 5px;
+    border: 1px solid #aaa;
+    border-radius: 9px;
+    background-color: white;
+    padding: 9px;-webkit-box-shadow: 3px 2px 10px -2px rgba(0,0,0,0.75);
+-moz-box-shadow: 3px 2px 10px -2px rgba(0,0,0,0.75);
+box-shadow: 3px 2px 10px -2px rgba(0,0,0,0.75);
+}
+
+.padding-xl {
+    padding: 10px;
+}
+
+.padding-md {
+    padding: 5px;
+}
+
+.padding-0 {
+    padding: 0;
+}
+
+.padding-sm {
+    padding: 2px;
+}
+
+.canvas-container {
+    margin: 50px;
+}
+
+/*nav bar components*/
+.users-online-container {
+    display: inline-flex;
+}
+
+#mobileUsersOnline {
+    font-size: 21px;
+    padding-left: 13px;
+}
+
+#webUsersOnline {
+    font-size: 21px;
+    padding-left: 13px;
+}
+
+#li-report {
+    width: 131px;
+}
+
+/*Loading bar for web/mobile users*/
+.loader {
+    margin-top: 4px;
+    margin-left: 11px;
+    border: 5px solid #f3f3f3; /* Light grey */
+    border-top: 3px solid #428bca; /* Blue */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+.active-user-header {
+    text-align: center;
+}
+
+.serverStatus {
+    display: inline-flex;
+}
+
+.serverStatusDown i {
+    color: red;
+    padding-left: 11px;
+}
+
+.serverStatusUp i {
+    color: green;
+    padding-left: 11px;
+}
+
+/*Login*/
+.login-form {
+    width: 585px;
+    background-color: #2fa5cc;
+    -webkit-box-shadow: 6px 7px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 6px 7px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 6px 7px 5px 0px rgba(0,0,0,0.75);
+}
+
+.form-horizontal {
+    padding: 20px;
+}
+
+.login-form h1 {
+    text-align: center;
+    padding-top: 10px;
+}
+
+.float-vertical-align {
+    position: absolute;
+    top: 50%;
+    right: 40px;
+    transform: translateY(-50%);
+}
+
+.performance-link {
+    font-size: 14px;
+}
+
+
+
+
+/*random login*/
+body, html {
+    height: 100%;
+    background-repeat: no-repeat;
+}
+
+.card-container.card {
+    max-width: 350px;
+    padding: 40px 40px;
+    -webkit-box-shadow: 5px 6px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 5px 6px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 5px 6px 5px 0px rgba(0,0,0,0.75);
+}
+
+/*.btn {
+    font-weight: 700;
+    height: 36px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+}*/
+
+/*
+ * Card component
+ */
+.card {
+    background-color: #b5b6b7;
+    /* just in case there no content*/
+    padding: 20px 25px 30px;
+    margin: 0 auto 25px;
+    margin-top: 50px;
+    /* shadows and rounded borders */
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.profile-img-card {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 10px;
+    display: block;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+
+/*
+ * Form styles
+ */
+.profile-name-card {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0 0;
+    min-height: 1em;
+}
+
+.reauth-email {
+    display: block;
+    color: #404040;
+    line-height: 2;
+    margin-bottom: 10px;
+    font-size: 14px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.form-signin #inputEmail,
+.form-signin #inputPassword {
+    direction: ltr;
+    height: 44px;
+    font-size: 16px;
+}
+
+.form-signin input[type=email],
+.form-signin input[type=password],
+.form-signin input[type=text],
+.form-signin button {
+    width: 100%;
+    display: block;
+    margin-bottom: 10px;
+    z-index: 1;
+    position: relative;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.form-signin .form-control:focus {
+    border-color: rgb(104, 145, 162);
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgb(104, 145, 162);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgb(104, 145, 162);
+}
+
+.btn.btn-signin {
+    /*background-color: #4d90fe; */
+    background-color: rgb(104, 145, 162);
+    /* background-color: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));*/
+    padding: 0px;
+    font-weight: 700;
+    font-size: 14px;
+    height: 36px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border: none;
+    -o-transition: all 0.218s;
+    -moz-transition: all 0.218s;
+    -webkit-transition: all 0.218s;
+    transition: all 0.218s;
+}
+
+    .btn.btn-signin:hover,
+    .btn.btn-signin:active,
+    .btn.btn-signin:focus {
+        background-color: rgb(12, 97, 33);
+    }
+
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: white;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 0px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+.text-bold {
+    font-weight: bold;
+}
+/*event rows*/
+#table-row-color-1 {
+    color: red;
+}
+
+#table-row-color-2 {
+    color: orange;
+}
+
+#table-row-color-3 {
+    color: green;
+}
+
+a.fa-bell {
+    position: relative;
+    font-size: 2em;
+    cursor: pointer;
+}
+
+span.fa-comment {
+    position: absolute;
+    /* font-size: 0.6em; */
+    font-size: 20px;
+    top: -4px;
+    color: red;
+    right: -10px;
+}
+
+span.num {
+    position: absolute;
+    font-size: 0.4em;
+    top: 1px;
+    color: #fff;
+    right: -2px;
+}
+
+#settingsBtn {
+    cursor: pointer;
+}
+
+/*LED lamps*/
+.led-box {
+    height: 11px;
+    width: 25%;
+    margin: -5px 0;
+    float: left;
+}
+
+.led-green {
+    width: 24px;
+    height: 24px;
+    background-color: #ABFF00;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 9px, #89FF00 0 2px 12px;
+}
+
+
+.led-red {
+    margin: 0px -6px;
+    width: 24px;
+    height: 24px;
+    background-color: #ff0000;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #ac1313 0 -1px 9px, #be0e0e 0 2px 12px;
+}

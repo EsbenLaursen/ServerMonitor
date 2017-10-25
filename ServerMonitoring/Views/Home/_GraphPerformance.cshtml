@@ -1,0 +1,106 @@
+﻿@using ServerMonitoring.Helpers
+@model ServerMonitoring.Models.RequestDataViewModel
+
+@{
+    ViewBag.Title = "Performance";
+}
+<div class="canvas-container">
+    <canvas id="canvas2" style="display: block;"></canvas>
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        setInterval(function () {
+            $.ajax({
+                url: "/api/requestGraphData",
+                type: 'GET',
+                success: function (data) {
+                    config.data.datasets[0].data = data.AverageResponseTimeGraphData;
+                  
+                    window.myLine.update();
+                },
+                error: function (error) {
+                }
+            });
+        }, 100 * 60 * 1);
+
+        window.onload = function () {
+            var ctx = document.getElementById("canvas2").getContext("2d");
+            window.myLine = new Chart(ctx, config);
+        };
+        Chart.defaults.global.defaultFontFamily = "Tahoma";
+        var color = Chart.helpers.color;
+        var config = {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: "Average response time",
+                    backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.blue,
+                    fill: false,
+                    data: @Html.JsonInsert(Model.AverageResponseTimeGraphData),
+                }]
+            },
+            options: {
+                responsive: true,
+
+                scales: {
+                    xAxes: [{
+                        type: "time",
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Time',
+                            fontSize: 18
+
+                        },
+                        ticks: {
+                            fontSize: 16
+                        },
+                        unit: 'hour',
+                        unitStepSize: 1,
+                        time: {
+                            displayFormats: {
+                                'hour': 'HH:mm'
+                            }
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Responsetime/ms',
+                            fontSize: 18
+
+                        },
+                        ticks: {
+                            fontSize: 16
+                        }
+                    }]
+                },
+                legend: {
+                    display: true, labels: { fontSize: 18 }
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            var response = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
+
+
+                            return 'Response time: ' + response + 'ms';
+                        },
+                        title: function (tooltipItems, data) {
+                            var tooltipItem = tooltipItems[0];
+                            var time = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].x;
+                            return 'Time: ' + moment(time).format('HH:mm');;
+                        }
+                    }
+                }
+            }
+        };
+    });
+</script>
+

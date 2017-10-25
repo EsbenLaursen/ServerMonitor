@@ -1,0 +1,38 @@
+﻿@model ServerMonitoring.Models.DashBoardViewModel
+
+<div class="panel panel-primary" style="margin-right: 1px;">
+    <div class="panel-heading">
+        RAM details
+    </div>
+    <div class="panel-body fixed-panel">
+                    <div id="ram-unavailable" style="display:none;"><b><i class="fa fa-ban" aria-hidden="true"></i></b></div>
+                    <div id="ram-available">
+                        <div class="row">
+                            <div class="col-md-6 padding-0">
+                                <div class="canvas-pie-container">
+                                    <canvas class="box-shadow padding-canvas" id="canvas-ram"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-md-6 padding-0">
+                                <div class="ram-text-container">
+                                    <p id="ram-unavailable-text"></p>
+                                    <p id="ram-available-text"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+
+
+
+
+
+    });
+
+</script>

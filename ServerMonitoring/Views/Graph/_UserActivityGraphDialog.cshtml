@@ -1,0 +1,132 @@
+﻿@model ServerMonitoring.Models.DashBoardViewModel
+@using ServerMonitoring.Helpers
+
+<canvas class="box-shadow padding-canvas" id="canvas-multi-graph-dialog"></canvas>
+
+<script>
+    $(document).ready(function() {
+    
+    
+        //Chart js get color and set font family
+        Chart.defaults.global.defaultFontFamily = "Tahoma";
+        var color = Chart.helpers.color;
+
+        var userGraph2 = document.getElementById("canvas-multi-graph-dialog").getContext("2d");
+
+        //Store graph in variable
+        window.userGraph2 = new Chart(userGraph2, configUserGraph2);
+    
+
+        //Call the update method
+        UpdateUserOnlineGraph2();
+
+        //Update the multi graph (User online part)
+        function UpdateUserOnlineGraph2() {
+            $.ajax({
+                url: "/api/graphData",
+                type: 'GET',
+                datatype: 'json',
+                success: function(data) {
+                    configUserGraph2.data.datasets[0].data = data.MobileUsersData;
+                    configUserGraph2.data.datasets[1].data = data.WebUsersData;
+                    window.multiGraph2.update();
+                },
+                error: function (error) {
+                    console.log('UpdateUserOnlineGraph graph error: ' + error);
+                }
+            });
+        }
+        setInterval(UpdateUserOnlineGraph2, 100 * 60 * 1);
+
+  
+
+        //Configuration for Active Users 
+        var configUserGraph2 = {
+            type: "line",
+            data: {
+                datasets: [{
+                    label: "Active mobile user",
+                    backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.red,
+                    fill: false,
+                    yAxisID: "y-axis-0",
+                    data: @Html.JsonInsert(Model.MobileUsersData),
+                }, {
+                    label: "Active web users",
+                    backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.blue,
+                    fill: false,
+                    yAxisID: "y-axis-0",
+                    data: @Html.JsonInsert(Model.WebUsersData),
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: "User Activity",
+                    fontSize: 16
+                },
+                scales: {
+                    yAxes: [{
+                        position: "left",
+                        id: "y-axis-0",
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Users',
+                            fontSize: 14
+
+                        },
+                        ticks: {
+                            fontSize: 14
+                        }
+                    }],
+                    xAxes: [{
+                        type: "time",
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Time',
+                            fontSize: 14
+
+                        },
+                        ticks: {
+                            autoSkip: false,
+                            maxRotation: 45,
+                            minRotation: 45,
+                            fontSize: 14
+                        },
+                        unit: 'hour',
+                        unitStepSize: 1,
+                        time: {
+                            displayFormats: {
+                                'hour': 'HH:mm'
+                            }
+                        }
+                    }],
+                },
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var users = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
+
+                            var type;
+                            if(tooltipItem.datasetIndex == 0) { type = "Mobile" } else { type="Web"  }
+
+                            return type + ' users: ' + users;
+                        },
+                        title: function(tooltipItems, data) {
+                            var tooltipItem = tooltipItems[0];
+                            var time = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].x;
+                            return 'Time: ' + moment(time).format('HH:mm');;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>

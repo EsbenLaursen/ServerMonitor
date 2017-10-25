@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoring", "ServerMonitoring\ServerMonitoring.csproj", "{F21588B5-8D59-4A7D-9DEE-122997324708}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{20B53E34-D166-43D4-BC91-23E6734D921B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{4ABE9E72-E632-4E30-8CDB-167DF6AE6935}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Jenkins|Any CPU = Jenkins|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F21588B5-8D59-4A7D-9DEE-122997324708}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F21588B5-8D59-4A7D-9DEE-122997324708}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F21588B5-8D59-4A7D-9DEE-122997324708}.Jenkins|Any CPU.ActiveCfg = Jenkins|Any CPU
+		{F21588B5-8D59-4A7D-9DEE-122997324708}.Jenkins|Any CPU.Build.0 = Jenkins|Any CPU
+		{F21588B5-8D59-4A7D-9DEE-122997324708}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F21588B5-8D59-4A7D-9DEE-122997324708}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20B53E34-D166-43D4-BC91-23E6734D921B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20B53E34-D166-43D4-BC91-23E6734D921B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20B53E34-D166-43D4-BC91-23E6734D921B}.Jenkins|Any CPU.ActiveCfg = Jenkins|Any CPU
+		{20B53E34-D166-43D4-BC91-23E6734D921B}.Jenkins|Any CPU.Build.0 = Jenkins|Any CPU
+		{20B53E34-D166-43D4-BC91-23E6734D921B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20B53E34-D166-43D4-BC91-23E6734D921B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ABE9E72-E632-4E30-8CDB-167DF6AE6935}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ABE9E72-E632-4E30-8CDB-167DF6AE6935}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ABE9E72-E632-4E30-8CDB-167DF6AE6935}.Jenkins|Any CPU.ActiveCfg = Jenkins|Any CPU
+		{4ABE9E72-E632-4E30-8CDB-167DF6AE6935}.Jenkins|Any CPU.Build.0 = Jenkins|Any CPU
+		{4ABE9E72-E632-4E30-8CDB-167DF6AE6935}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ABE9E72-E632-4E30-8CDB-167DF6AE6935}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

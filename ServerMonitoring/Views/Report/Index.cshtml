@@ -1,0 +1,250 @@
+﻿@model ServerMonitoring.Models.ReportViewModel
+
+@{
+    ViewBag.Title = "Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <script src="~/Scripts/notify.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div id="report-outer-container">
+                <div class="col-md-12"><h1 class="report-title">Report summary</h1></div>
+                <div class="col-md-12">
+
+                    <div class="col-md-1"> <h5> Date: </h5></div>
+                    <div class="col-md-5">
+                        <div class="dropdown">
+                            <input id="datedropdown" class="btn dropdown-toggle" value="Last month" type="text" readonly>
+                            <div id="date-dropdown" class="dropdown-menu">
+                                <div class="row" id="datepicker-body">
+                                    <div class="col-md-4 my-datepicker">
+                                        <div id="datepickerFrom" type="text" name="from" value="@DateTime.Now.ToString("yyyy/MM/dd")"></div>
+                                    </div>
+                                    <div class="col-md-4 my-datepicker">
+                                        <div id="datepickerTo" type="text" name="to" value="@DateTime.Now.AddDays(-30).ToString("yyyy/MM/dd")"></div>
+                                    </div>
+                                    <div class="col-md-3 padding-0">
+                                        <ul class="default-date-range-list">
+                                            <li class="btn mybtn-default" id="oneDayBtn">Last 24 hours</li>
+                                            <li class="btn mybtn-default" id="oneWeekBtn">Last Week</li>
+                                            <li class="btn mybtn-default" id="oneMonthBtn">Last Month</li>
+                                            <li class="btn mybtn-default" id="oneYearBtn">Last Year</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p id="errorMessage"></p>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <a class="mybtn mybtn-default" id="saveDateChooseBtn">Confirm</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3"><div class="btn mybtn-success" id="runReportBtn">Run report</div></div>
+                    <div class="col-md-3"><div class="btn mybtn-default pull-right" id="sendMailBtn" disabled>Send as email</div></div>
+                </div>
+
+                <div id="report-container">
+                    <p style="text-align: center;">Choose the period that you want a report for.</p>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+</body>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            requestData();
+            var customFormat = 'yy/mm/dd';
+            $("#errorMessage").css("display", "none");
+            $("#datepickerFrom").datepicker({ dateFormat: customFormat, showOn: 'none', minDate: -366, maxDate: 0 });
+            $("#datepickerTo").datepicker({ dateFormat: customFormat, showOn: 'none', minDate: -366, maxDate: 0 });
+
+
+            $('#saveDateChooseBtn').click(function (event) {
+                var from = $('#datepickerFrom').val();
+                var to = $('#datepickerTo').val();
+
+                var error = compareTime(to, from);
+                if (error == null) {
+                    $('.dropdown').toggleClass('open');
+                    $("#datedropdown").val(from + ' - ' + to);
+                }
+            });
+            var error = null;
+            function compareTime(to, from) {
+                error = null;
+                if (new Date(to) < new Date(from)) {
+                    error = "Invalid dates: Start date cannot be greater than end date";
+                };
+                if (new Date(to).toDateString() === new Date(from).toDateString()) {
+                    error = "Invalid dates: Both dates are equal";
+                }
+                if (error == null) {
+                    $("#errorMessage").css("display", "none");
+                    $("#sendMailBtn").removeAttr('disabled');
+                    $("#runReportBtn").removeAttr('disabled');
+                } else {
+                    $("#errorMessage").css("display", "block").html(error);
+                    $("#sendMailBtn").attr('disabled', 'disabled');
+                    $("#runReportBtn").attr('disabled', 'disabled');
+                }
+                //Add more checks
+                return error;
+            }
+
+            //Buttons
+            $("#oneDayBtn").click(function () {
+                defaultDateChoosen(1);
+            });
+            $("#oneWeekBtn").click(function () {
+                defaultDateChoosen(7);
+            });
+            $("#oneMonthBtn").click(function () {
+                defaultDateChoosen(30);
+            });
+            $("#oneYearBtn").click(function () {
+                defaultDateChoosen(365);
+            });
+
+            function defaultDateChoosen(days) {
+                var fromString = moment().add(-days, 'days').format('YYYY/MM/DD');
+                var toString = moment().format('YYYY/MM/DD').toString();
+
+                // Select these dates
+                var dateFrom = new Date();
+                dateFrom.setDate(dateFrom.getDate() - days);
+                var dateTo = new Date();
+                $('#datepickerFrom').datepicker("setDate", dateFrom);
+                $('#datepickerTo').datepicker("setDate", dateTo);
+                dateChoosen();
+
+                $("#datedropdown").val(fromString + ' - ' + toString);
+            };
+
+            $("#datepickerFrom").change(function () {
+                dateChoosen();
+            });
+            $("#datepickerTo").change(function () {
+                dateChoosen();
+            });
+
+
+            function dateChoosen() {
+                var from = $('#datepickerFrom').val();
+                var to = $('#datepickerTo').val();
+                var error = compareTime(to, from);
+                $("#datedropdown").val(from + ' - ' + to);
+            };
+
+            var firstTime = true;
+            $("#datedropdown").on('click', function (event) {
+                if (error == null) {
+                    $(this).parent().toggleClass('open');
+                }
+                dateChoosen();
+                if (firstTime) {
+                    defaultDateChoosen(30);
+                    firstTime = false;
+                }
+
+
+            });
+
+            $("#sendMailBtn").click(function () {
+                if (error == null) {
+                    $("#sendMailBtn").attr("disabled", "disabled");
+                    CloseDropDownIfOpen();
+                    $.ajax({
+                        url: '/Report/SendMail',
+                        // data: { model: },
+                        type: "POST",
+                        success: function (data) {
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            console.log('error');
+                        }
+                    });
+                }
+            });
+
+            //check if dropdown is open -> then close it
+            function CloseDropDownIfOpen()
+            {
+                if ($('.dropdown').hasClass('open')) {
+                    $('.dropdown').toggleClass('open');
+                }
+            }
+
+
+            $("#runReportBtn").click(function () {
+                if (error == null) {
+                    if ($('#datedropdown').val() == "Last month") {
+                        defaultDateChoosen(30);
+                    };
+
+                    CloseDropDownIfOpen();
+                    $("#runReportBtn").attr('disabled', 'disabled');
+
+                    var from = $("#datepickerFrom").val();
+                    var to = $("#datepickerTo").val();
+
+
+                    
+
+                    $('#report-container').html('<div class="loader" id="reportLoader"></div>');;
+
+                    //defaultDateChoosen
+                    $.ajax({
+                        url: '/Report/GenerateReport/',
+                        data: { from: from, to: to },
+                        type: "POST",
+                        success: function (data) {
+
+                            $('#report-container').html(data);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            console.log('error');
+                        }
+                    });
+                } else {
+                   
+                   // $('.dropdown').toggleClass('open');
+                }
+            });
+
+
+
+            $('body').on('click', function (e) {
+                if (!$('#date-dropdown').is(e.target)
+                    && $('#date-dropdown').has(e.target).length === 0
+                    && $('.open').has(e.target).length === 0
+                ) {
+                    $('#date-dropdown').removeClass('open');
+                }
+            });
+
+
+
+        });
+    </script>
+}

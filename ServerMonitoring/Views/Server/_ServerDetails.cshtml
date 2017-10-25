@@ -1,0 +1,88 @@
+﻿@model ServerMonitoring.Models.DashBoardViewModel
+    <div class="panel panel-primary" style="margin-right: 1px;">
+        <div class="panel-heading">
+            @Html.DropDownList("server-dropdown",
+                new SelectList(Model.ServerDataViewModel.Servers, "Id", "Name", 0),
+                new { @class = "myDropdownServers pull-right" })
+            <h3 class="panel-title">
+                Server details
+            </h3>
+        </div>
+        <div class="panel-body fixed-panel">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Server status</th>
+                        <th>
+                            <div class="led-box">
+                                <div class="led-green" id="led-lamp"></div>
+                            </div>
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <th>Data received</th>
+                        <th id="dataReceivedDate" title="Data received"></th>
+                    </tr>
+                    <tr>
+                        <th id="UpDownTime">Up time</th>
+                        <th>
+                            <div id="uptimeDiv">
+                                <p id="upTime"></p>
+                            </div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Threads</th>
+                        <th id="currentThreads" title="Current threads"></th>
+                    </tr>
+                    <tr>
+                        <th>Processers</th>
+                        <th id="currentProcesses" title="Processer"></th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+<script>
+    $(document).ready(function () {
+
+        //these should be refactored and made generic
+        var requestInfoShown = true;
+        $('.toggle-requests').click(function () {
+            var elements = document.getElementsByClassName("requestInfo");
+            for (var i = 0; i < elements.length; i++) {
+                $(elements[i]).toggle();
+            }
+            if (requestInfoShown) {
+                $('#requests-arrow').removeClass("fa-chevron-up").addClass("fa-chevron-down");
+                requestInfoShown = false;
+            } else {
+                $('#requests-arrow').removeClass("fa-chevron-down").addClass("fa-chevron-up");
+                requestInfoShown = true;
+            }
+            return false;
+        });
+
+        var requestAverageInfoShown = true;
+        $('.toggle-average-requests').click(function () {
+            var elements = document.getElementsByClassName("requestAverageInfo");
+            for (var i = 0; i < elements.length; i++) {
+                $(elements[i]).toggle();
+            }
+            if (requestAverageInfoShown) {
+                $('#requests-average-arrow').removeClass("fa-chevron-up").addClass("fa-chevron-down");
+                requestAverageInfoShown = false;
+            } else {
+                $('#requests-average-arrow').removeClass("fa-chevron-down").addClass("fa-chevron-up");
+                requestAverageInfoShown = true;
+            }
+            return false;
+        });
+
+       
+        
+
+    });
+</script>

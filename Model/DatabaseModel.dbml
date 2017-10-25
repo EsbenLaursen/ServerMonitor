@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="ServerMonitoring" Class="DatabaseModelDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=VETECH27\SQLEXPRESS01;Initial Catalog=ServerMonitoring;Integrated Security=False;User ID=sa" SettingsObjectName="Model.Properties.Settings" SettingsPropertyName="ServerMonitoringConnectionString2" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.RequestSummary" Member="RequestSummaries">
+    <Type Name="RequestSummary">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DateTimeCreated" Storage="_DatetimeStart" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="WebUsers" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="MobileUsers" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ResponseTime" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="Requests" Type="System.Int32" DbType="INT not null" CanBeNull="false" />
+      <Association Name="RequestSummary_UserSummary" Member="UserSummaries" ThisKey="Id" OtherKey="RequestSummaryId" Type="UserSummary" />
+      <Association Name="RequestSummary_Event" Member="Events" ThisKey="Id" OtherKey="RequestSummaryId" Type="Event" />
+      <Association Name="RequestSummary_Event1" Member="Events1" ThisKey="Id" OtherKey="RequestSummaryId" Type="Event" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserSummary" Member="UserSummaries">
+    <Type Name="UserSummary">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="RequestSummaryId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Request" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Device" Storage="_Mobile" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DateTimeCreated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="RequestSummary_UserSummary" Member="RequestSummary" ThisKey="RequestSummaryId" OtherKey="Id" Type="RequestSummary" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SystemSetup" Member="SystemSetups">
+    <Type Name="SystemSetup">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="TagId" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Value" Type="System.String" DbType="NVarChar(200) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ServerDetail" Member="ServerDetails">
+    <Type Name="ServerDetail">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Created" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Utilization" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Thread" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Processes" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Handles" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="UpTime" Type="System.Decimal" DbType="decimal NOT NULL" CanBeNull="false" />
+      <Column Name="RAMUtilization" Type="System.Decimal" DbType="Decimal(18,0) NOT NULL" CanBeNull="false" />
+      <Column Name="RAMAvailable" Type="System.Decimal" DbType="Decimal(18,0) NOT NULL" CanBeNull="false" />
+      <Column Name="RAMTotal" Type="System.Decimal" DbType="Decimal(18,0) NOT NULL" CanBeNull="false" />
+      <Column Name="ServerId" Type="System.Int32" DbType="int not null" CanBeNull="false" />
+      <Column Name="NetworkUtilization" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" />
+      <Column Name="BytesSent" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" />
+      <Column Name="BytesReceived" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" />
+      <Association Name="ServerDetail_Event" Member="Events" ThisKey="Id" OtherKey="ServerDetailId" Type="Event" />
+      <Association Name="Server_ServerDetail" Member="Server" ThisKey="ServerId" OtherKey="Id" Type="Server" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Server" Member="Servers">
+    <Type Name="Server">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Server_ServerDetail" Member="ServerDetails" ThisKey="Id" OtherKey="ServerId" Type="ServerDetail" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ActiveUsers" Member="ActiveUsers">
+    <Type Name="ActiveUser">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Created" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="WebUsers" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="MobilUsers" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EventType" Member="EventTypes">
+    <Type Name="EventType">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Created" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="PeakValue" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" />
+      <Column Name="Notify" Type="System.Boolean" DbType="BIT NOT NULL" CanBeNull="false" />
+      <Column Name="Risk" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="EventType_Event" Member="Events" ThisKey="Id" OtherKey="EventTypeId" Type="Event" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Request" Member="Requests">
+    <Type Name="Request">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Url" Type="System.String" DbType="NVarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="DateCreated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Device" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="RequestTimeMiliSeconds" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Notification" Member="Notifications">
+    <Type Name="Notification">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Seen" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Created" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="Notification_Event" Member="Events" ThisKey="Id" OtherKey="NotificationId" Type="Event" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Settings" Member="Settings">
+    <Type Name="Setting">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Value" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SettingsTypeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="SettingsType_Setting" Member="SettingsType" ThisKey="SettingsTypeId" OtherKey="Id" Type="SettingsType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SettingsType" Member="SettingsTypes">
+    <Type Name="SettingsType">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="SettingsType_Setting" Member="Settings" ThisKey="Id" OtherKey="SettingsTypeId" Type="Setting" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ServerDetailCurrent" Member="ServerDetailCurrents">
+    <Type Name="ServerDetailCurrent">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Created" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Utilization" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Thread" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Processes" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Handles" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="UpTime" Type="System.Decimal" DbType="Decimal(18,0) NOT NULL" CanBeNull="false" />
+      <Column Name="RAMUtilization" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="RAMAvailable" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="RAMTotal" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ServerId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NetworkUtilization" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" />
+      <Column Name="BytesSent" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" />
+      <Column Name="BytesReceived" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Event" Member="Events">
+    <Type Name="Event">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Created" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="EventTypeId" Type="System.Int32" DbType="Int NULL" CanBeNull="false" />
+      <Column Name="Value" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NotificationId" Type="System.Int32" DbType="Int NULL" CanBeNull="true" />
+      <Column Name="ServerDetailId" Type="System.Int32" DbType="Int NULL" CanBeNull="true" />
+      <Column Name="RequestSummaryId" Type="System.Int32" DbType="Int NULL" CanBeNull="true" />
+      <Association Name="RequestSummary_Event" Member="RequestSummary" ThisKey="RequestSummaryId" OtherKey="Id" Type="RequestSummary" IsForeignKey="true" />
+      <Association Name="EventType_Event" Member="EventType" ThisKey="EventTypeId" OtherKey="Id" Type="EventType" IsForeignKey="true" />
+      <Association Name="RequestSummary_Event1" Member="RequestSummary1" ThisKey="RequestSummaryId" OtherKey="Id" Type="RequestSummary" IsForeignKey="true" />
+      <Association Name="Notification_Event" Member="Notification" ThisKey="NotificationId" OtherKey="Id" Type="Notification" IsForeignKey="true" />
+      <Association Name="ServerDetail_Event" Member="ServerDetail" ThisKey="ServerDetailId" OtherKey="Id" Type="ServerDetail" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EmailRecipent" Member="EmailRecipents">
+    <Type Name="EmailRecipent">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Email" Type="System.String" DbType="NVarChar(200) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+</Database>

@@ -1,0 +1,23 @@
+﻿@model ServerMonitoring.Models.SettingsModel
+
+@{
+    for (int i = 0; i < Model.GraphSettings.Count; i++)
+    {
+
+        @Html.HiddenFor(m => m.GraphSettings[i].Id)
+        @Html.HiddenFor(m => m.GraphSettings[i].Description)
+        @Html.HiddenFor(m => m.GraphSettings[i].Name)
+<p><b>@Model.GraphSettings[i].Description</b></p>
+        <div class="interval-div">
+            
+            @Html.TextBoxFor(m => m.GraphSettings[i].Value, Model.GraphSettings[i].Value.ToString()
+                   , new { @class = "form-control", id = "editValue", type = "number", @min = "0" })
+            @Html.ValidationMessageFor(m => m.GraphSettings[i].Value, "Please enter a valid interval", new { @class = "text-danger" })
+        <p> minutes</p>
+        </div>
+        if (Model.GraphSettings.Count - 1 != i)
+        {
+            <br /><hr />
+        }
+    }
+}

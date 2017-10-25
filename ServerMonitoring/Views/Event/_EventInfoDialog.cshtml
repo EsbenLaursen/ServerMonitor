@@ -1,0 +1,170 @@
+﻿@model ServerMonitoring.Models.EventDialogModel
+@using Model
+
+<div class="modal-header">
+    <span class="close">&times;</span>
+    <div style="display:inline-flex">
+        <h4 class="modal-title"><b>Event info</b> </h4>
+    </div>
+</div>
+@{
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                @if (Model.Event != null)
+            {
+                    <table class="table table-striped">
+                        @*<thead>
+                                <tr>
+                                    <td>123</td>
+                                    <td>123</td>
+                                </tr>
+                            </thead>*@
+                        <tbody>
+
+                            <tr>
+                                <td class="text-bold">Generel</td>
+                                <td></td>
+                            </tr>
+                            @if (Model.Event.EventType != null)
+                            {
+                                <tr>
+                                    <td>Type</td>
+                                    <td>@Model.Event.EventType.Name</td>
+                                </tr>
+                                <tr>
+                                    @{
+                                        int value = Model.Event.Value;
+                                        long minute = value % 60;
+                                        long hour = (value / 60) % 24;
+                                        long days = (value / 60 / 24) % 24;
+                                        string uptimeString = days + " days " + hour + " hours " + minute + " minutes";
+                                    }
+
+                                    @if (Model.Event.EventType.Name == StaticStrings.ServerDown || Model.Event.EventType.Name == StaticStrings.ServerUp)
+                                    {
+                                        <td>Time span</td>
+                                        <td>@Model.Event.Created - <br />
+                                         @Model.Event.Created.AddMinutes(Model.Event.Value)  <br />
+                                            (@uptimeString)
+                                    </td>
+                                    }
+                                    else {
+                                        <td>Value</td>
+                                        <td>@Model.Event.Value</td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>Risk</td>
+
+                                    @if (Model.Event.EventType.Risk == 1)
+                                    {
+                                        <td id="table-row-color-1"> Danger </td>
+                                    }
+                                    else if (Model.Event.EventType.Risk == 2)
+                                    {
+                                        <td id="table-row-color-2">Warning</td>
+                                    }
+                                    else
+                                    {
+                                        <td id="table-row-color-3">Healthy</td>
+                                    }
+                                </tr>
+                            }
+
+                            @if (Model.Event.ServerDetail != null)
+                            {
+                                <tr>
+                                    <td class="text-bold">Server snapshot (@Model.Event.Created)</td>
+                                    <td></td>
+                                </tr>
+                                @*<tr>
+                                    <td>Server up time</td>
+                                    <td>@Model.Uptime</td>
+                                </tr>*@
+                                <tr>
+                                    <td>RAM available</td>
+                                    <td>@Model.Event.ServerDetail.RAMAvailable</td>
+                                </tr>
+                                <tr>
+                                    <td>Processes</td>
+                                    <td>@Model.Event.ServerDetail.Processes</td>
+                                </tr>
+                                <tr>
+                                    <td>Handles</td>
+                                    <td>@Model.Event.ServerDetail.Handles</td>
+                                </tr>
+                                <tr>
+                                    <td>Utilization</td>
+                                    <td>@Model.Event.ServerDetail.Utilization</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="text-bold">Server details</td>
+                                    <td>No information available</td>
+                                </tr>
+                            }
+                            @if (Model.Event.RequestSummary != null)
+                            {
+                                <tr>
+                                    <td class="text-bold">Request/Responsetime</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Mobile users</td>
+                                    <td>@Model.Event.RequestSummary.MobileUsers</td>
+                                </tr>
+                                <tr>
+                                    <td>Web users</td>
+                                    <td>@Model.Event.RequestSummary.WebUsers</td>
+                                </tr>
+                                <tr>
+                                    <td>Requests</td>
+                                    <td>@Model.Event.RequestSummary.Requests</td>
+                                </tr>
+                                <tr>
+                                    <td>Response time average</td>
+                                    <td>@Model.Event.RequestSummary.ResponseTime</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="text-bold">Request/Responsetime</td>
+                                    <td>No requests were found</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>}
+            else
+            {
+                    <div class="text-bold">Unable to fetch information for this event</div>
+                }
+            </div>
+        </div>
+
+    </div>
+}
+<div class="modal-footer">
+    <a class="mybtn mybtn-default" id="closeBtn"><i class="fa fa-close"></i> Close</a>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#closeBtn').click(function () {
+            $('#myModal').css("display", "none");
+        });
+
+        function heey(val) {
+            console.log("works");
+        }
+
+    });
+
+
+
+
+
+
+</script>
